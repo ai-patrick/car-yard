@@ -186,15 +186,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Services</h4>
-                <ul>
-                    <li><a href="#">Vehicle Financing</a></li>
-                    <li><a href="#">Trade-In</a></li>
-                    <li><a href="#">Concierge</a></li>
-                    <li><a href="#">Warranty</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
                 <h4>Contact</h4>
                 <p>Nairobi, Kenya<br>+254 700 000 000<br>info@prestigeauto.co.ke</p>
             </div>

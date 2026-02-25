@@ -301,7 +301,7 @@ $payment_error = $_GET['payment_error'] ?? '';
             <div class="order-divider"></div>
             <div class="order-total-row">
                 <span class="order-total-label">Grand Total</span>
-                <span class="order-total-amount" id="grandTotal">KSh 0</span>
+                <span class="order-total-amount" id="grandTotal">$ 0</span>
             </div>
 
             <div class="paystack-section">
@@ -339,15 +339,6 @@ $payment_error = $_GET['payment_error'] ?? '';
                     <li><a href="inventory.php">Showroom</a></li>
                     <li><a href="garage.php">My Garage</a></li>
                     <li><a href="login.php">Client Portal</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Services</h4>
-                <ul>
-                    <li><a href="#">Vehicle Financing</a></li>
-                    <li><a href="#">Trade-In</a></li>
-                    <li><a href="#">Concierge</a></li>
-                    <li><a href="#">Warranty</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -420,7 +411,7 @@ $payment_error = $_GET['payment_error'] ?? '';
                         <div class="car-card-content">
                             <div class="car-card-type">${car.type}</div>
                             <h3 class="car-card-name">${car.name}</h3>
-                            <div class="car-card-price">KSh ${car.price}</div>
+                            <div class="car-card-price">$ ${car.price}</div>
                         </div>
                         <div class="car-card-cta" style="bottom: 10px; opacity: 1; transform: translateY(0);">
                             <button class="btn-remove" onclick="removeCar(${car.id})">Remove</button>
@@ -439,12 +430,12 @@ $payment_error = $_GET['payment_error'] ?? '';
                             <div class="order-car-name">${car.name}</div>
                             <div class="order-car-type">${car.type}</div>
                         </div>
-                        <div class="order-car-price">KSh ${formatPrice(price)}</div>
+                        <div class="order-car-price">$ ${formatPrice(price)}</div>
                     `;
                     orderLines.appendChild(line);
                 });
 
-                document.getElementById('grandTotal').textContent = 'KSh ' + formatPrice(grandTotal);
+                document.getElementById('grandTotal').textContent = '$ ' + formatPrice(grandTotal);
             }
         }
 

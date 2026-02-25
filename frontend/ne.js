@@ -20,13 +20,11 @@ const cars = typeof dbCars !== "undefined" ? dbCars : [];
 
 // ─── RENDER GRID ────────────────────────────────────────────────────────
 const grid = document.getElementById('carGrid');
-const INITIAL_COUNT = 6;
 
 if (grid) {
     cars.forEach((car, i) => {
-        const extra = i >= INITIAL_COUNT;
         const div = document.createElement('div');
-        div.className = 'car-card' + (extra ? ' extra-card' : '');
+        div.className = 'car-card';
         div.innerHTML = `
                 <img src="${car.img}" class="car-card-img" alt="${car.name}" loading="lazy">
                 <div class="car-card-overlay"></div>
@@ -34,7 +32,7 @@ if (grid) {
                 <div class="car-card-content">
                     <div class="car-card-type">${car.type}</div>
                     <h3 class="car-card-name">${car.name}</h3>
-                    <div class="car-card-price">KSh ${car.price}</div>
+                    <div class="car-card-price">$ ${car.price}</div>
                 </div>
                 <div class="car-card-cta">
                     <div class="cta-circle">View<br>Details</div>
@@ -42,26 +40,6 @@ if (grid) {
             `;
         div.addEventListener('click', () => openDetail(car));
         grid.appendChild(div);
-    });
-}
-
-// ─── VIEW ALL TOGGLE ─────────────────────────────────────────────────────
-let expanded = false;
-const viewAllBtn = document.getElementById('viewAllBtn');
-if (viewAllBtn) {
-    viewAllBtn.addEventListener('click', () => {
-        expanded = !expanded;
-        const extras = document.querySelectorAll('.extra-card');
-        extras.forEach((el, i) => {
-            if (expanded) {
-                el.classList.add('show');
-                el.style.animationDelay = `${i * 0.05}s`;
-            } else {
-                el.classList.remove('show');
-            }
-        });
-        document.getElementById('viewAllText').textContent = expanded ? 'Show Less' : 'View All';
-        document.querySelector('.view-all-btn .arrow').textContent = expanded ? '↑' : '→';
     });
 }
 
@@ -77,7 +55,7 @@ function openDetail(car) {
     document.getElementById('detailHeroImg').alt = car.name;
     document.getElementById('detailType').textContent = car.type;
     document.getElementById('detailName').textContent = car.name;
-    document.getElementById('detailPrice').textContent = `KSh ${car.price}`;
+    document.getElementById('detailPrice').textContent = `$ ${car.price}`;
     document.getElementById('detailDescTitle').textContent = `About the ${car.name}`;
     document.getElementById('detailDesc').textContent = car.desc;
 

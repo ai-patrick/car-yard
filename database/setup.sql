@@ -53,9 +53,25 @@ CREATE TABLE IF NOT EXISTS payments (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Appointments Table
+CREATE TABLE IF NOT EXISTS appointments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    preferred_date DATE NOT NULL,
+    preferred_time TIME NOT NULL,
+    vehicle_interest VARCHAR(255),
+    message TEXT,
+    status ENUM('pending', 'contacted', 'completed', 'cancelled') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Insert Default Admin User (Password: admin123)
 INSERT IGNORE INTO users (username, email, password_hash, role) VALUES 
-('admin', 'admin@prestigeauto.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+('admin', 'admin@prestigeauto.com', '$2y$10$v1cdid94fg9tEzYav47IfukgCGkRpQY5vC3NwtemW7rWJUhGhiXcu', 'admin');
 
 -- Insert Initial Vehicle Data
 INSERT IGNORE INTO vehicles (name, type, price, image_url, description, engine, power, acceleration, drive) VALUES

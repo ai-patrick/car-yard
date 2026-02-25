@@ -72,7 +72,7 @@ try {
                 <button class="btn-primary-gold" onclick="document.querySelector('.section-inventory').scrollIntoView({behavior:'smooth'})">
                     View Inventory
                 </button>
-                <button class="btn-outline-gold">Request Appointment</button>
+                <a href="appointment.php" style="text-decoration:none;"><button class="btn-outline-gold">Request Appointment</button></a>
             </div>
         </div>
 
@@ -93,12 +93,8 @@ try {
         <div class="section-header reveal">
             <div>
                 <div class="section-label">Our Collection</div>
-                <h2 class="section-title">Featured<br>Vehicles</h2>
+                <h2 class="section-title">Our Full<br>Collection</h2>
             </div>
-            <button class="view-all-btn" id="viewAllBtn">
-                <span id="viewAllText">View All</span>
-                <span class="arrow">→</span>
-            </button>
         </div>
 
         <div class="car-grid" id="carGrid">
@@ -159,15 +155,6 @@ try {
                     <li><a href="inventory.php">Showroom</a></li>
                     <li><a href="garage.php">My Garage</a></li>
                     <li><a href="login.php">Client Portal</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Services</h4>
-                <ul>
-                    <li><a href="#">Vehicle Financing</a></li>
-                    <li><a href="#">Trade-In</a></li>
-                    <li><a href="#">Concierge</a></li>
-                    <li><a href="#">Warranty</a></li>
                 </ul>
             </div>
             <div class="footer-col">

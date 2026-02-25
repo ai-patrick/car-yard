@@ -40,12 +40,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare("DELETE FROM vehicles WHERE id=?");
         $stmt->execute([$id]);
         $msg = "<div class='msg msg-success'>Vehicle deleted successfully.</div>";
+    } elseif ($action === 'update_appointment') {
+        $id = $_POST['id'];
+        $status = $_POST['status'];
+        $stmt = $pdo->prepare("UPDATE appointments SET status=? WHERE id=?");
+        $stmt->execute([$status, $id]);
+        $msg = "<div class='msg msg-success'>Appointment status updated.</div>";
     }
 }
 
 // Fetch all vehicles for the table
 $stmt = $pdo->query("SELECT * FROM vehicles ORDER BY id DESC");
 $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch all appointments
+try {
+    $appt_stmt = $pdo->query("SELECT a.*, u.username FROM appointments a LEFT JOIN users u ON a.user_id = u.id ORDER BY a.created_at DESC");
+    $appointments = $appt_stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $appointments = [];
+}
+$pending_count = count(array_filter($appointments, fn($a) => $a['status'] === 'pending'));
 
 ?>
 <!DOCTYPE html>
@@ -76,6 +91,19 @@ $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         .msg { padding: 1rem; margin-bottom: 1.5rem; border: 1px solid; font-size: 0.9rem; }
         .msg-success { background: rgba(46, 204, 113, 0.1); border-color: #2ecc71; color: #2ecc71; }
+
+        /* Appointments Section */
+        .appt-section-admin { margin-top: 4rem; }
+        .appt-section-admin .admin-title { display: flex; align-items: center; gap: 1rem; }
+        .appt-badge { background: var(--accent); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 500; }
+        .status-badge { display: inline-block; padding: 0.25rem 0.7rem; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 3px; font-weight: 500; }
+        .status-pending { background: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3); }
+        .status-contacted { background: rgba(52, 152, 219, 0.15); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3); }
+        .status-completed { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); }
+        .status-cancelled { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); }
+        .status-select { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.3rem 0.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; cursor: pointer; }
+        .status-select:focus { outline: none; border-color: var(--gold); }
+        td .detail-text { color: var(--muted); font-size: 0.78rem; }
     </style>
 </head>
 <body>
@@ -103,7 +131,7 @@ $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <th>Image</th>
                         <th>Name</th>
                         <th>Type</th>
-                        <th>Price (KSh)</th>
+                        <th>Price (USD)</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -160,7 +188,7 @@ $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Price (KSh)</label>
+                        <label>Price (USD)</label>
                         <input type="number" name="price" id="f_price" class="form-control" step="0.01" required>
                     </div>
                     <div class="form-group">
@@ -195,6 +223,72 @@ $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
+    <!-- Appointment Requests Section -->
+    <div class="appt-section-admin">
+        <div class="admin-header">
+            <h1 class="admin-title">
+                Appointment Requests
+                <?php if ($pending_count > 0): ?>
+                    <span class="appt-badge"><?= $pending_count ?> Pending</span>
+                <?php endif; ?>
+            </h1>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Contact</th>
+                    <th>Date & Time</th>
+                    <th>Vehicle Interest</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($appointments as $appt): ?>
+                <tr>
+                    <td>
+                        <strong><?= htmlspecialchars($appt['full_name']) ?></strong><br>
+                        <span class="detail-text">@<?= htmlspecialchars($appt['username'] ?? 'N/A') ?></span>
+                    </td>
+                    <td>
+                        <?= htmlspecialchars($appt['email']) ?><br>
+                        <span class="detail-text"><?= htmlspecialchars($appt['phone']) ?></span>
+                    </td>
+                    <td>
+                        <?= date('M j, Y', strtotime($appt['preferred_date'])) ?><br>
+                        <span class="detail-text"><?= date('g:i A', strtotime($appt['preferred_time'])) ?></span>
+                    </td>
+                    <td><?= htmlspecialchars($appt['vehicle_interest'] ?: '—') ?></td>
+                    <td><?= htmlspecialchars(mb_strimwidth($appt['message'] ?: '—', 0, 60, '...')) ?></td>
+                    <td>
+                        <span class="status-badge status-<?= $appt['status'] ?>">
+                            <?= ucfirst($appt['status']) ?>
+                        </span>
+                    </td>
+                    <td>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="action" value="update_appointment">
+                            <input type="hidden" name="id" value="<?= $appt['id'] ?>">
+                            <select name="status" class="status-select" onchange="this.form.submit()">
+                                <option value="pending" <?= $appt['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
+                                <option value="contacted" <?= $appt['status'] === 'contacted' ? 'selected' : '' ?>>Contacted</option>
+                                <option value="completed" <?= $appt['status'] === 'completed' ? 'selected' : '' ?>>Completed</option>
+                                <option value="cancelled" <?= $appt['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                <?php if (count($appointments) === 0): ?>
+                <tr><td colspan="7" style="color: var(--muted); text-align: center; padding: 2rem;">No appointment requests yet.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
     <footer class="site-footer" style="margin-top: 4rem;">
         <div class="footer-content">
             <div class="footer-brand">
@@ -208,15 +302,6 @@ $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <li><a href="inventory.php">Showroom</a></li>
                     <li><a href="garage.php">My Garage</a></li>
                     <li><a href="login.php">Client Portal</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Services</h4>
-                <ul>
-                    <li><a href="#">Vehicle Financing</a></li>
-                    <li><a href="#">Trade-In</a></li>
-                    <li><a href="#">Concierge</a></li>
-                    <li><a href="#">Warranty</a></li>
                 </ul>
             </div>
             <div class="footer-col">

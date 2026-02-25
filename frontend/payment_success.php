@@ -214,7 +214,7 @@ if ($reference) {
                 </div>
                 <div class="receipt-row">
                     <span class="receipt-label">Amount Paid</span>
-                    <span class="receipt-value">KSh <?= number_format($payment['amount'], 0) ?></span>
+                    <span class="receipt-value">$ <?= number_format($payment['amount'], 0) ?></span>
                 </div>
                 <div class="receipt-row">
                     <span class="receipt-label">Date</span>
@@ -236,7 +236,7 @@ if ($reference) {
                             <div class="vehicle-item-name"><?= htmlspecialchars($v['name']) ?></div>
                             <div class="vehicle-item-type"><?= htmlspecialchars($v['type']) ?></div>
                         </div>
-                        <div class="vehicle-item-price">KSh <?= number_format($v['price'], 0) ?></div>
+                        <div class="vehicle-item-price">$ <?= number_format($v['price'], 0) ?></div>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -269,15 +269,6 @@ if ($reference) {
                     <li><a href="inventory.php">Showroom</a></li>
                     <li><a href="garage.php">My Garage</a></li>
                     <li><a href="login.php">Client Portal</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Services</h4>
-                <ul>
-                    <li><a href="#">Vehicle Financing</a></li>
-                    <li><a href="#">Trade-In</a></li>
-                    <li><a href="#">Concierge</a></li>
-                    <li><a href="#">Warranty</a></li>
                 </ul>
             </div>
             <div class="footer-col">
