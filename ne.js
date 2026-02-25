@@ -64,7 +64,10 @@ document.getElementById('viewAllBtn').addEventListener('click', () => {
 const detailPanel = document.getElementById('carDetail');
 const detailClose = document.getElementById('detailClose');
 
+let currentCar = null;
+
 function openDetail(car) {
+    currentCar = car;
     document.getElementById('detailHeroImg').src = car.img;
     document.getElementById('detailHeroImg').alt = car.name;
     document.getElementById('detailType').textContent = car.type;
@@ -111,11 +114,27 @@ detailPanel.addEventListener('keydown', e => { if (e.key === 'Escape') closeDeta
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
 
 // ─── CART ────────────────────────────────────────────────────────────────
-let cartItems = 0;
-function addToCart() {
-    cartItems++;
+let garage = JSON.parse(localStorage.getItem('prestige_garage')) || [];
+
+function updateCartBadge() {
     const badge = document.getElementById('cartCount');
-    badge.textContent = cartItems;
+    if (badge) {
+        badge.textContent = garage.length;
+    }
+}
+updateCartBadge();
+
+function addToCart() {
+    if (!currentCar) return;
+
+    // Avoid duplicates
+    if (!garage.find(c => c.id === currentCar.id)) {
+        garage.push(currentCar);
+        localStorage.setItem('prestige_garage', JSON.stringify(garage));
+    }
+
+    const badge = document.getElementById('cartCount');
+    badge.textContent = garage.length;
     badge.classList.add('bump');
     setTimeout(() => badge.classList.remove('bump'), 300);
     closeDetail();

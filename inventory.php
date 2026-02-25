@@ -56,7 +56,7 @@ try {
                 <li><a href="login.php">Client Portal</a></li>
             <?php endif; ?>
         </ul>
-        <button class="nav-garage" onclick="void(0)">
+        <button class="nav-garage" onclick="window.location.href='garage.php'">
             Garage <span class="cart-count" id="cartCount">0</span>
         </button>
     </nav>
