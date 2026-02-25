@@ -1,3 +1,34 @@
+<?php
+session_start();
+require 'db.php';
+
+// Fetch vehicles
+try {
+    $stmt = $pdo->query("SELECT * FROM vehicles ORDER BY id ASC");
+    $db_vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $cars_data = [];
+    foreach ($db_vehicles as $v) {
+        $cars_data[] = [
+            'id' => (int)$v['id'],
+            'name' => $v['name'],
+            'type' => $v['type'],
+            'price' => number_format($v['price'], 0), 
+            'img' => $v['image_url'],
+            'desc' => $v['description'],
+            'gallery' => [$v['image_url'], $v['image_url'], $v['image_url'], $v['image_url']],
+            'specs' => [
+                ['label' => 'Engine', 'value' => $v['engine'], 'unit' => ''],
+                ['label' => 'Power', 'value' => $v['power'], 'unit' => ''],
+                ['label' => '0–100 km/h', 'value' => $v['acceleration'], 'unit' => ''],
+                ['label' => 'Drive', 'value' => $v['drive'], 'unit' => '']
+            ]
+        ];
+    }
+} catch (PDOException $e) {
+    $cars_data = [];
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,11 +44,17 @@
     <div class="cursor-ring" id="cursorRing"></div>
 
     <nav id="mainNav">
-        <a class="nav-logo" href="#">PRESTIGE<span>AUTO</span></a>
+        <a class="nav-logo" href="index.php">PRESTIGE<span>AUTO</span></a>
         <ul class="nav-links">
-            <li><a href="#">Showroom</a></li>
-            <li><a href="#">Financing</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="inventory.php">Showroom</a></li>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                    <li><a href="admin.php">Admin Dashboard</a></li>
+                <?php endif; ?>
+                <li><a href="logout.php">Logout (<?= htmlspecialchars($_SESSION['username']) ?>)</a></li>
+            <?php else: ?>
+                <li><a href="login.php">Client Portal</a></li>
+            <?php endif; ?>
         </ul>
         <button class="nav-garage" onclick="void(0)">
             Garage <span class="cart-count" id="cartCount">0</span>
@@ -117,6 +154,9 @@
         <p style="color:var(--muted)">Nairobi, Kenya · +254 700 000 000</p>
     </footer>
 
+    <script>
+        const dbCars = <?= json_encode($cars_data) ?>;
+    </script>
     <script defer src="ne.js"></script>
 </body>
 </html>
