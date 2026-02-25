@@ -59,6 +59,6 @@ INSERT IGNORE INTO users (username, email, password_hash, role) VALUES
 
 -- Insert Initial Vehicle Data
 INSERT IGNORE INTO vehicles (name, type, price, image_url, description, engine, power, acceleration, drive) VALUES
-('Rolls-Royce Phantom Drophead', 'Luxury', 5000.00, 'images/phantom.webp', 'The Phantom Drophead is the pinnacle of open-air luxury motoring.', '6.75L V12 Twin-Turbo', '563 bhp', '5.1 seconds', 'RWD'),
-('Porsche 911 Turbo S', 'Sports', 3000.00, 'images/911 turbo.jpg', 'An icon reimagined. The 911 Turbo S distills over five decades of evolution.', '3.8L Flat-6 Twin-Turbo', '650 bhp', '2.7 seconds', 'AWD'),
-('Nissan GT-R Nismo', 'Sports', 2500.00, 'images/nippon.jpg', 'Godzilla. Built on the streets of Tokyo and perfected on the track.', '3.8L V6 Twin-Turbo', '600 bhp', '2.5 seconds', 'ATTESA AWD');
+('Rolls-Royce Phantom Drophead', 'Luxury Sedans', 5000.00, 'images/phantom.webp', 'The Phantom Drophead is the pinnacle of open-air luxury motoring.', '6.75L V12 Twin-Turbo', '563 bhp', '5.1 seconds', 'RWD'),
+('Porsche 911 Turbo S', 'Sports Cars', 3000.00, 'images/911 turbo.jpg', 'An icon reimagined. The 911 Turbo S distills over five decades of evolution.', '3.8L Flat-6 Twin-Turbo', '650 bhp', '2.7 seconds', 'AWD'),
+('Nissan GT-R Nismo', 'Sports Cars', 2500.00, 'images/nippon.jpg', 'Godzilla. Built on the streets of Tokyo and perfected on the track.', '3.8L V6 Twin-Turbo', '600 bhp', '2.5 seconds', 'ATTESA AWD');
